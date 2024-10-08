@@ -15,32 +15,31 @@ class ProductProduct(models.Model):
     def _compute_adr_report_class_display_name(self):
         for record in self:
             adr_good = record.adr_goods_id
-            res = _("UN")
-            res += f" {adr_good.un_number}, {adr_good.name}"
+            res = _(f"UN {adr_good.un_number}, {adr_good.name}")
             if record.nag:
-                res += _(" {}").format(record.nag)
+                res += _(f" {record.nag}")
 
             if record.label_first:
-                res += ", {}".format(record._get_name_from_selection("label_first"))
+                res += f", {record._get_name_from_selection('label_first')}"
 
             if record.label_second and record.label_third:
-                res += ", ({}, {})".format(
-                    record._get_name_from_selection("label_second"),
-                    record._get_name_from_selection("label_third"),
-                )
+                string_label_second = record._get_name_from_selection("label_second")
+                string_label_third = record._get_name_from_selection("label_third")
+                res += f", ({string_label_second}, {string_label_third})"
             elif record.label_second:
-                res += ", ({})".format(record._get_name_from_selection("label_second"))
+                res += f", ({record._get_name_from_selection('label_second')})"
 
             if record.packaging_group:
-                res += ", {}".format(record._get_name_from_selection("packaging_group"))
+                res += f", {record._get_name_from_selection('packaging_group')}"
 
             if adr_good.tunnel_restriction_code:
-                res += ", ({})".format(
-                    record._get_name_from_selection("adr_tunnel_restriction_code")
+                string_tunnel_restriction_code = record._get_name_from_selection(
+                    "adr_tunnel_restriction_code"
                 )
+                res += f", ({string_tunnel_restriction_code})"
 
             if record.envir_hazardous == "yes":
-                res += ", {}".format(_("Environmentally hazardous"))
+                res += _("Environmentally hazardous")
 
             record.adr_report_class_display_name = res
 
